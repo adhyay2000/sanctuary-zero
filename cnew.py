@@ -33,11 +33,11 @@ async def consumer_handler(cphrsuit, websocket, username, chatroom, servaddr):
     async for recvdata in websocket:
         try:
             if recvdata.split(sepr)[0] == "SNCTRYZERO" and recvdata.split(sepr)[1] == "USERJOINED" and recvdata.split(sepr)[3] == chatroom:
-                print("[" + obtntime() + "] USERJOINED > " + recvdata.split(sepr)[2] + " joined - " + recvdata.split(sepr)[4] + " are connected - Indexes updated")
+                print("[" + obtntime() + "] USERJOINED > " + recvdata.split(sepr)[2] + " joined")
             elif recvdata.split(sepr)[0] == "SNCTRYZERO" and recvdata.split(sepr)[1] == "USEREXITED" and recvdata.split(sepr)[3] == chatroom:
-                print("[" + obtntime() + "] USEREXITED > " + recvdata.split(sepr)[2] + " left - " + recvdata.split(sepr)[4] + " are connected - Indexes updated")
+                print("[" + obtntime() + "] USEREXITED > " + recvdata.split(sepr)[2] + " left")
             elif recvdata.split(sepr)[0] == "SNCTRYZERO" and recvdata.split(sepr)[1] == "USERSLIST" and recvdata.split(sepr)[3] == chatroom:
-                print("[" + obtntime() + "] USERSLIST > " + recvdata.split(sepr)[2] + " are connected")
+                print("[" + obtntime() + "] SNCTRYZERO > " + recvdata.split(sepr)[2] + " are connected")
             else:
                 recvjson = json.loads(cphrsuit.decrjson(recvdata))
                 if recvjson["chatroom"] == chatroom and recvjson["username"] != username:

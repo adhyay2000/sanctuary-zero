@@ -1,4 +1,4 @@
-import asyncio, websockets, time, json, click, secrets, os, sys, socket
+import asyncio, websockets, time, json, click, secrets, sys, socket
 from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
 from prompt_toolkit import print_formatted_text, HTML
@@ -84,7 +84,7 @@ async def hello(servaddr, username, chatroom, password):
                 print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>A connection to the server was lost</red>".format(EXPT)))
             raise KeyboardInterrupt
 
-			
+
 def obtntime():
     timestmp = time.localtime()
     timehour = str(timestmp.tm_hour)
@@ -122,13 +122,17 @@ def chekpass(pswd):
 
 
 def formusnm(username):
-    if len(username) < 10:      return username + " " * (10 - len(username))
-    elif len(username) > 10:    return username[0:10]
-    else:                       return username
+    if len(username) < 10:
+        return username + " " * (10 - len(username))
+    elif len(username) > 10:
+        return username[0:10]
+    else:
+        return username
+
 
 def check_socket(servaddr):
     addr= [x.strip().strip("/") for x in servaddr.split(":")] #['ws',ip, port_no]
-    if addr[0]=='ws':
+    if addr[0] == "ws":
         try:
             addr[2]= int(addr[2])
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
@@ -136,15 +140,16 @@ def check_socket(servaddr):
                 if sock.connect_ex((addr[1], addr[2])) == 0:
                     return True
                 else:
-                    print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>Server not set up at '" + servaddr +  "</red>"))
+                    print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>Server is not set up at '" + servaddr + "'</red>"))
                     return False
         except ValueError:
-            print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>Invalid port number: '"+addr[2]+"' </red>"))
+            print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>'" + addr[2] + "' is not a valid port number</red>"))
             return False
         except Exception:
             return False
-    print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>Invalid protocol used, example use, 'ws://127.0.0.1:9696' </red>"))
+    print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>The protocol is used is not WebSockets-compliant</red>"))
     return False
+
 
 @click.command()
 @click.option("-u", "--username", "username", help="Enter the username that you would identify yourself with", required=True)
@@ -159,7 +164,7 @@ def mainfunc(username, password, chatroom, servaddr):
         print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <b><seagreen>Starting Sanctuary ZERO v18102020 up...</seagreen></b>"))
         print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <seagreen>Attempted connection to '" + servaddr + "' at " + str(time.ctime()) + "</seagreen>"))
         if not check_socket(servaddr):
-            print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>Attempted connection to '" + servaddr + "' failed at " + str(time.ctime()) +" due to invalid url" "</red>"))
+            print_formatted_text(HTML("[" + obtntime() + "] " + "SNCTRYZERO > <red>Connection could not be established due to invalid URI</red>"))
             sys.exit()
         if username.strip() != "":
             if chatroom is None:
